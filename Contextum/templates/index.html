@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <title>Контекстум — аналитика нового уровня</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <script>
+    window.CURRENT_CONTEXT_FILE = "{{ current_file or '' }}";
+  </script>
+  <script defer src="{{ url_for('static', filename='script.js') }}"></script>
+</head>
+<body class="bg-slate-950 bg-radial-gradient from-slate-900 via-slate-950 to-black text-slate-50">
+  <div class="min-h-screen flex items-center justify-center px-4 py-8">
+    <div class="w-full max-w-5xl bg-slate-900/80 backdrop-blur-xl rounded-3xl shadow-2xl border border-cyan-500/20 overflow-hidden">
+
+      <!-- Шапка с логотипом и слоганом -->
+      <div class="relative px-8 py-6 md:px-10 md:py-7 bg-gradient-to-r from-cyan-500 via-blue-600 to-indigo-700">
+        <div class="absolute inset-0 opacity-30 pointer-events-none">
+          <div class="bg-[radial-gradient(circle_at_top,_#ffffff40,_transparent_60%)] w-full h-full"></div>
+        </div>
+        <div class="relative flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="flex items-center gap-4">
+ <div class="w-16 h-16 md:w-20 md:h-20 rounded-2xl overflow-hidden border border-sky-200/60 shadow-lg shadow-sky-900/60 bg-slate-900/40 flex items-center justify-center translate-y-[-6px] md:translate-y-[-8px]">
+  <img
+    src="{{ url_for('static', filename='kontekstum.jpg') }}"
+    alt="Логотип Контекстум"
+    class="w-full h-full object-cover"
+  >
+</div>
+            <div>
+<h1 class="kontekstum-metal tracking-tight text-white drop-shadow-sm">Контекстум</h1>
+              <p class="mt-1 text-sm md:text-base text-cyan-50/90 font-medium tracking-wide">
+                Контекстум — аналитика нового уровня
+              </p>
+            </div>
+          </div>
+          <div class="text-xs md:text-sm text-cyan-50/80 md:text-right">
+            <p>VK · Ollama · YandexGPT</p>
+            <p class="opacity-80">Интерактивный анализ социальных данных</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Вкладки -->
+      <div class="px-6 md:px-8 pt-4 border-b border-slate-800 bg-slate-900/60">
+        <div class="flex space-x-2 md:space-x-4 overflow-x-auto no-scrollbar">
+          <button id="tab-get" class="tab-button active px-4 md:px-6 py-2 text-sm md:text-base rounded-t-2xl font-semibold text-cyan-400 border-b-2 border-cyan-400 bg-slate-900">
+            Получение данных
+          </button>
+          <button id="tab-analysis" class="tab-button px-4 md:px-6 py-2 text-sm md:text-base rounded-t-2xl font-semibold text-slate-400 border-b-2 border-transparent hover:text-cyan-300 hover:border-cyan-500/50">
+            Анализ с Ollama
+          </button>
+          <button id="tab-ygpt" class="tab-button px-4 md:px-6 py-2 text-sm md:text-base rounded-t-2xl font-semibold text-slate-400 border-b-2 border-transparent hover:text-cyan-300 hover:border-cyan-500/50">
+            Анализ с YandexGPT
+          </button>
+        </div>
+      </div>
+
+      <!-- Контент вкладок -->
+      <div class="px-6 md:px-8 py-6 bg-slate-900/70">
+        <!-- Получение данных VK -->
+        <div id="tab-get-content" class="space-y-5">
+          <div class="space-y-1">
+            <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Ключ доступа из настроек приложения на dev.vk.com. Подробная инструкция: dev.vk.com/ru/api/getting-started">
+              Ключ доступа VK
+            </label>
+            <div class="relative">
+              <input id="access_token" type="password" class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 pr-16 shadow-inner focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" placeholder="Введите ключ доступа (access token) к VK API">
+              <button id="toggle-password" type="button" class="absolute inset-y-0 right-3 flex items-center text-xs md:text-sm text-cyan-300 hover:text-cyan-200">
+                Показать
+              </button>
+            </div>
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Введите ID группы (clubXXXXXX) или пользователя (idXXXXXX) VK. Идентификатор можно найти в URL адресной строки https://vk.com/[id]">
+              Идентификатор группы/пользователя
+            </label>
+            <input id="domain" type="text" class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 shadow-inner focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" placeholder="Введите идентификатор группы/пользователя">
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Максимальное количество выгружаемых постов - 100">
+              Количество постов
+            </label>
+            <input id="count" type="number" min="1" max="100" value="5" class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 shadow-inner focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500">
+          </div>
+          <button id="fetch-btn" type="button" disabled class="w-full rounded-2xl py-3 font-semibold text-slate-300 text-sm md:text-base bg-slate-700/70 cursor-not-allowed transition-colors disabled:opacity-70 hover:bg-cyan-600 hover:text-white">
+            Получить данные
+          </button>
+        </div>
+
+        <!-- Анализ Ollama -->
+        <div id="tab-analysis-content" class="space-y-4 hidden">
+          <div class="space-y-1">
+            <label class="block text-xs md:text-sm font-medium text-slate-100">Температура: <span id="temp-value" class="font-semibold text-cyan-400">0.5</span></label>
+            <input id="temperature" type="range" min="0" max="1" step="0.1" value="0.5" class="w-full accent-cyan-400">
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Системная роль для LLM. Определяет контекст диалога">
+              Роль
+            </label>
+            <input id="role" type="text" class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 shadow-inner focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" placeholder="Например: Ты аналитик данных">
+          </div>
+          <div class="space-y-2">
+            <div id="chat" class="w-full h-64 border border-slate-800 rounded-2xl bg-slate-950/70 p-3 overflow-y-auto text-sm space-y-2 shadow-inner"></div>
+            <div class="flex space-x-2">
+              <input id="user-msg" type="text" class="flex-1 rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2 shadow-inner focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" placeholder="Задайте вопрос языковой модели...">
+              <button id="send-btn" type="button" disabled class="rounded-2xl px-4 py-2 font-semibold text-slate-50 text-sm md:text-base bg-slate-700/70 cursor-not-allowed hover:bg-emerald-600 hover:text-white transition-colors">
+                Начать диалог
+              </button>
+            </div>
+          </div>
+        </div>
+
+<!-- Анализ YandexGPT -->
+<div id="tab-ygpt-content" class="space-y-4 hidden">
+  <!-- Температура -->
+  <div class="space-y-1">
+    <label class="block text-xs md:text-sm font-medium text-slate-100">
+      Температура: <span id="ygpt-temp-value" class="font-semibold text-cyan-400">0.5</span>
+    </label>
+    <input id="ygpt-temperature" type="range" min="0" max="1" step="0.1" value="0.5" 
+           class="w-full accent-cyan-400">
+  </div>
+  
+  <!-- Ключ YandexGPT -->
+  <div class="space-y-1">
+    <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Создайте API-ключ для Вашего сервисного аккаунта. Подробная инструкция: https://yandex.cloud/ru/docs/iam/concepts/authorization/api-key">
+      Ключ доступа YandexGPT
+    </label>
+    <div class="relative">
+      <input id="ygpt-api-key" type="password" 
+             class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 pr-16 shadow-inner 
+                    focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" 
+             placeholder="Введите ключ доступа YandexGPT">
+      <button id="ygpt-toggle-password" type="button" 
+              class="absolute inset-y-0 right-3 flex items-center text-xs md:text-sm text-cyan-300 hover:text-cyan-200">
+        Показать
+      </button>
+    </div>
+  </div>
+  
+  <!-- Наименование папки -->
+  <div class="space-y-1">
+    <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Идентификатор каталога на Yandex Cloud. Подробная инструкция: https://yandex.cloud/ru/docs/resource-manager/operations/folder/create">
+      Идентификатор каталога
+    </label>
+    <input id="ygpt-folder-id" type="text" 
+           class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 shadow-inner 
+                  focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" 
+           placeholder="Введите идентификатор каталога">
+  </div>
+  
+  <!-- Системная роль -->
+  <div class="space-y-1">
+    <label class="block text-xs md:text-sm font-medium text-slate-100 cursor-help" title="Системная роль для YandexGPT. Определяет контекст диалога">
+      Системная роль
+    </label>
+    <input id="ygpt-role" type="text" 
+           class="w-full rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2.5 shadow-inner 
+                  focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" 
+           placeholder="Например: Ты аналитик данных">
+  </div>
+  
+  <!-- Чат -->
+  <div class="space-y-2">
+    <div id="ygpt-chat" class="w-full h-64 border border-slate-800 rounded-2xl bg-slate-950/70 p-3 overflow-y-auto text-sm space-y-2 shadow-inner"></div>
+    <div class="flex space-x-2">
+      <input id="ygpt-user-msg" type="text" 
+             class="flex-1 rounded-2xl bg-slate-950/70 border border-slate-700 px-4 py-2 shadow-inner 
+                    focus:ring-2 focus:ring-cyan-500 focus:border-cyan-400 outline-none text-sm md:text-base placeholder-slate-500" 
+             placeholder="Задайте вопрос языковой модели...">
+      <button id="ygpt-send-btn" type="button" disabled 
+              class="rounded-2xl px-4 py-2 font-semibold text-slate-50 text-sm md:text-base bg-slate-700/70 cursor-not-allowed hover:bg-emerald-600 hover:text-white transition-colors">
+        Отправить
+      </button>
+    </div>
+  </div>
+</div>
+
+
+  <!-- Модальное окно -->
+  <div id="modal" class="fixed inset-0 flex items-center justify-center bg-black/60 z-50 hidden">
+    <div class="bg-slate-900 rounded-2xl shadow-2xl max-w-md w-full mx-4 p-6 border border-slate-700">
+      <h2 class="text-lg font-semibold text-slate-50 mb-3">Сообщение</h2>
+      <p id="modal-text" class="text-sm text-slate-200 mb-5"></p>
+      <div class="text-right">
+        <button id="modal-close" class="inline-flex items-center px-4 py-2 bg-cyan-600 text-white text-sm font-semibold rounded-xl hover:bg-cyan-500">
+          Продолжить
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="w-full text-center mt-3 text-xs md:text-sm text-slate-400">
+    © Борис Мурзакаев
+  </footer>
+</body>
+</html>

@@ -1,0 +1,95 @@
+.kontekstum-metal {
+ font-size: clamp(2.9rem, 7.3vw, 4.5rem);
+  font-weight: 900;
+  color: #f0f0f0;
+  text-shadow: 
+    3px 3px 0 #e5e5e5,
+    6px 6px 0 #d0d0d0,
+    2px 2px 20px rgba(255,255,255,0.4),
+    -2px -2px 10px rgba(0,0,0,0.2);
+  transform: perspective(800px) rotateX(20deg);
+  position: relative;
+  letter-spacing: -0.03em;
+}
+
+.kontekstum-metal::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.8), transparent);
+  animation: metal-shine 4s ease-in-out infinite;
+  border-radius: 16px;
+}
+
+@keyframes metal-shine {
+  0%, 100% { opacity: 0; transform: translateX(-100%); }
+  10%, 90% { opacity: 1; }
+  100% { transform: translateX(100%); }
+}
+
+@keyframes metal-shine-full {
+  0% { 
+    opacity: 0; 
+    transform: translateX(-100%); 
+  }
+  10%, 85% { 
+    opacity: 1; 
+  }
+  100% { 
+    opacity: 0; 
+    transform: translateX(100%); 
+  }
+}
+
+
+.tab-button {
+  transition: color 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+  cursor: pointer !important; /* ✅ Фикс курсора */
+}
+.tab-button.active {
+  border-bottom-width: 2px !important;
+  border-color: #22d3ee !important;
+  color: #22d3ee !important;
+  background-color: rgba(15, 23, 42, 0.9) !important;
+  cursor: pointer !important; /* ✅ Активная вкладка */
+}
+.tab-button:hover {
+  color: #22d3ee;
+  border-color: #22d3ee50;
+  cursor: pointer !important;
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+#chat::-webkit-scrollbar,
+#ygpt-chat::-webkit-scrollbar {
+  width: 6px;
+}
+#chat::-webkit-scrollbar-track,
+#ygpt-chat::-webkit-scrollbar-track { background: rgba(15, 23, 42, 0.9); }
+#chat::-webkit-scrollbar-thumb,
+#ygpt-chat::-webkit-scrollbar-thumb { 
+  background: rgba(148, 163, 184, 0.7); 
+  border-radius: 9999px; 
+}
+#chat::-webkit-scrollbar-thumb:hover,
+#ygpt-chat::-webkit-scrollbar-thumb:hover { background: rgba(94, 234, 212, 0.8); }
+
+.bg-radial-gradient {
+  background-image: radial-gradient(circle at top, #0f172a 0%, #020617 45%, #000000 100%);
+}
+
+/* ✅ Фикс курсоров кнопок */
+button:not(:disabled) {
+  cursor: pointer !important;
+}
+button:disabled {
+  cursor: not-allowed !important;
+}
+
+/* Input фокус */
+input:focus {
+  outline: none !important;
+  box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.3) !important;
+}
